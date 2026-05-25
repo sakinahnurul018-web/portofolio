@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Portofolio - Nurul Sakinah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      padding: 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #38bdf8;
+    }
+
+    header p {
+      color: #94a3b8;
+    }
+
+    nav {
+      background: #020617;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 15px;
+    }
+
+    nav a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    section {
+      padding: 60px 10%;
+    }
+
+    h2 {
+      color: #38bdf8;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: #334155;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #020617;
+      color: #94a3b8;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #38bdf8;
+      color: #020617;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #0ea5e9;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Nurul Sakinah</h1>
+  <p>Mahasiswa | Creative Thinker | Future Professional</p>
+</header>
+
+<nav>
+  <a href="#about">Tentang</a>
+  <a href="#experience">Pengalaman</a>
+  <a href="#achievement">Pencapaian</a>
+  <a href="#contact">Kontak</a>
+</nav>
+
+<section id="about">
+  <h2>Tentang Saya</h2>
+  <div class="card">
+    <p>
+      Saya adalah seorang mahasiswa yang memiliki minat besar dalam pengembangan diri, kreativitas, dan teknologi. 
+      Dikenal sebagai pribadi yang disiplin, adaptif, dan memiliki rasa ingin tahu tinggi, saya aktif dalam berbagai 
+      kegiatan akademik maupun non-akademik. Saya percaya bahwa setiap pengalaman adalah peluang untuk berkembang 
+      dan menjadi versi terbaik dari diri sendiri.
+    </p>
+  </div>
+</section>
+
+<section id="experience">
+  <h2>Pengalaman Kerja</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3>Content Creator Intern</h3>
+      <p>Startup Digital Kreatif (2024)</p>
+      <p>Mengelola konten media sosial, membuat desain visual, dan meningkatkan engagement hingga 40%.</p>
+    </div>
+
+    <div class="card">
+      <h3>Asisten Peneliti</h3>
+      <p>Proyek Akademik (2023)</p>
+      <p>Membantu penelitian terkait nutrisi pakan ternak dan analisis data laboratorium.</p>
+    </div>
+
+    <div class="card">
+      <h3>Freelance Desainer</h3>
+      <p>2022 - Sekarang</p>
+      <p>Mengerjakan berbagai proyek desain poster, flyer, dan branding sederhana.</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="achievement">
+  <h2>Pencapaian & Karir</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3>Juara 1 Lomba Desain Poster Nasional</h3>
+      <p>2024</p>
+    </div>
+
+    <div class="card">
+      <h3>Mahasiswa Berprestasi</h3>
+      <p>2023</p>
+    </div>
+
+    <div class="card">
+      <h3>Sertifikasi Digital Marketing</h3>
+      <p>2024</p>
+    </div>
+
+    <div class="card">
+      <h3>Target Karir</h3>
+      <p>
+        Menjadi profesional di bidang kreatif dan teknologi, serta membangun brand personal yang kuat di era digital.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Kontak</h2>
+  <div class="card">
+    <p>Email: nurul.sakinah@email.com</p>
+    <p>Instagram: @nurulsakinah</p>
+    <p>LinkedIn: linkedin.com/in/nurulsakinah</p>
+    <a href="#" class="btn">Hubungi Saya</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Nurul Sakinah | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
