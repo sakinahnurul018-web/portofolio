@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- === SEO ON-PAGE BASIC === -->
+    <title>EduDash - Dashboard Mahasiswa Akademik & Jadwal Kuliah Modern</title>
+    <meta name="description" content="EduDash adalah sistem informasi akademik dan portal dashboard mahasiswa modern untuk memantau jadwal kuliah, progres SKS, IPK, tugas kuliah mandiri, dan informasi beasiswa secara real-time.">
+    <meta name="keywords" content="dashboard mahasiswa, portal akademik kuliah, sistem informasi akademik, jadwal kuliah online, edukasi digital, manajemen tugas mahasiswa, IPK kumulatif, KRS online">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="EduDash Team">
+    <link rel="canonical" href="https://edudash-demo.my.id/dashboard">
+
+    <!-- === OPEN GRAPH / FACEBOOK SEO === -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://edudash-demo.my.id/dashboard">
+    <meta property="og:title" content="EduDash - Portal Dashboard Mahasiswa Modern & Terintegrasi">
+    <meta property="og:description" content="Pantau aktivitas akademik, progres belajar, IPK, tugas kuliah, dan jadwal mingguan secara instan dengan desain minimalis UI/UX premium.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200&h=630&fit=crop">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- === TWITTER CARD SEO === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://edudash-demo.my.id/dashboard">
+    <meta name="twitter:title" content="EduDash - Portal Dashboard Mahasiswa Modern & Terintegrasi">
+    <meta name="twitter:description" content="Pantau aktivitas akademik, progres belajar, IPK, tugas kuliah, dan jadwal mingguan secara instan dengan desain minimalis UI/UX premium.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200&h=630&fit=crop">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Modal Animation */
+        .modal-hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- 1. MODAL COMPONENT (Hidden by default) -->
+    <div id="taskModal" class="modal-hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-slate-900/50 transition-opacity" onclick="toggleModal()"></div>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold" id="modal-title">Tambah Tugas Baru</h3>
+                    <button onclick="toggleModal()" class="text-slate-400 hover:text-slate-600" aria-label="Tutup modal"><i data-lucide="x"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="taskName" class="block text-sm font-medium text-slate-700">Nama Tugas</label>
+                        <input type="text" id="taskName" class="mt-1 block w-full border border-slate-200 rounded-xl px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label for="taskDeadline" class="block text-sm font-medium text-slate-700">Deadline</label>
+                        <input type="date" id="taskDeadline" class="mt-1 block w-full border border-slate-200 rounded-xl px-4 py-2 outline-none">
+                    </div>
+                </div>
+                <div class="mt-6 flex gap-3">
+                    <button class="flex-1 bg-indigo-600 text-white py-2 rounded-xl font-bold hover:bg-indigo-700">Simpan</button>
+                    <button onclick="toggleModal()" class="flex-1 bg-slate-100 text-slate-600 py-2 rounded-xl font-bold hover:bg-slate-200">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigasi -->
+    <aside class="w-64 bg-white border-r border-slate-100 flex flex-col p-6 fixed h-full z-50">
+        <div class="flex items-center space-x-3 mb-10 px-2">
+            <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="book-open"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tight text-indigo-900">EduDash</span>
+        </div>
+
+        <nav class="flex-1 space-y-2">
+            <a href="#" class="sidebar-active w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200" aria-label="Buka Halaman Dashboard">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <!-- 2. BADGE COMPONENT (On Schedule) -->
+            <a href="#" class="text-slate-500 hover:bg-slate-50 hover:text-indigo-600 w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200" aria-label="Buka Halaman Jadwal">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span class="font-medium">Jadwal</span>
+                </div>
+                <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Live</span>
+            </a>
+            <a href="#" class="text-slate-500 hover:bg-slate-50 hover:text-indigo-600 w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200" aria-label="Buka Halaman Kurikulum">
+                <i data-lucide="book" class="w-5 h-5"></i>
+                <span class="font-medium">Kurikulum</span>
+            </a>
+            <a href="#" class="text-slate-500 hover:bg-slate-50 hover:text-indigo-600 w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200" aria-label="Buka Halaman Profil">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="font-medium">Profil</span>
+            </a>
+        </nav>
+
+        <!-- 3. CARD COMPONENT (Storage Info) -->
+        <div class="mt-auto bg-slate-50 rounded-2xl p-4 border border-slate-100">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-slate-500">Penyimpanan Cloud</span>
+                <span class="text-xs font-bold text-indigo-600">85%</span>
+            </div>
+            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full w-[85%]"></div>
+            </div>
+            <button class="mt-3 w-full text-xs font-bold text-indigo-600 hover:underline">Tambah Kapasitas</button>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="ml-64 p-8">
+        <!-- Header Utama -->
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">Halo, Budi! 👋</h1>
+                <!-- 4. BREADCRUMB COMPONENT -->
+                <nav class="flex text-xs text-slate-400 mt-1" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1">
+                        <li><a href="#" class="hover:text-indigo-600">Home</a></li>
+                        <li><i data-lucide="chevron-right" class="w-3 h-3 mx-1"></i></li>
+                        <li class="text-slate-500 font-medium">Dashboard Mahasiswa</li>
+                    </ol>
+                </nav>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- 5. SEARCH BAR COMPONENT -->
+                <div class="relative hidden md:block">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                    </span>
+                    <label for="globalSearch" class="sr-only">Cari materi atau tugas</label>
+                    <input type="text" id="globalSearch" class="bg-white border border-slate-200 rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-indigo-100 outline-none transition-all w-64" placeholder="Cari materi atau tugas...">
+                </div>
+
+                <!-- 6. DROPDOWN COMPONENT (Notifications) -->
+                <div class="relative">
+                    <button class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-white rounded-full transition-all border border-transparent hover:border-slate-100 relative" aria-label="Membuka daftar notifikasi">
+                        <i data-lucide="bell" class="w-6 h-6"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-3 bg-white p-1.5 pr-4 rounded-full border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold border-2 border-white overflow-hidden cursor-pointer">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Foto Profil Budi Santoso - Mahasiswa Semester 4" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold leading-none">Budi Santoso</span>
+                        <span class="text-xs text-slate-400 mt-1 uppercase">Smt 4</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 7. ALERT COMPONENT -->
+        <div class="mb-8 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl flex items-center justify-between" role="alert">
+            <div class="flex items-center">
+                <i data-lucide="alert-triangle" class="text-amber-500 mr-3"></i>
+                <p class="text-sm text-amber-700 font-medium">Lengkapi Kuesioner Dosen sebelum masa pengisian berakhir pada 1 Mei!</p>
+            </div>
+            <button class="text-amber-500 hover:text-amber-700" aria-label="Tutup notifikasi"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Widget Jadwal -->
+                <section class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold flex items-center gap-2">
+                            <i data-lucide="calendar" class="text-indigo-600 w-5 h-5"></i>
+                            Jadwal Kuliah Hari Ini
+                        </h2>
+                        <!-- 8. BUTTON GROUP COMPONENT -->
+                        <div class="inline-flex rounded-lg shadow-sm" role="group" aria-label="Tampilan Filter Jadwal">
+                            <button type="button" class="px-3 py-1 text-xs font-bold bg-white border border-slate-200 rounded-l-lg hover:bg-slate-50 text-slate-600">Harian</button>
+                            <button type="button" class="px-3 py-1 text-xs font-bold bg-indigo-600 border border-indigo-600 text-white">Mingguan</button>
+                            <button type="button" class="px-3 py-1 text-xs font-bold bg-white border border-slate-200 rounded-r-lg hover:bg-slate-50 text-slate-600">Bulanan</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="group flex items-center p-4 rounded-2xl border border-slate-50 hover:border-indigo-100 hover:bg-indigo-50/30 transition-all">
+                            <div class="w-2 h-12 bg-indigo-600 rounded-full mr-4"></div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-slate-800">Pemrograman Web</h3>
+                                <div class="flex space-x-4 mt-1 text-sm text-slate-500">
+                                    <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> 08:00 - 10:30</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> Lab Komputer 3</span>
+                                </div>
+                            </div>
+                            <!-- 9. TOOLTIP SIMULATION -->
+                            <button type="button" class="p-2 text-slate-300 hover:text-indigo-600 relative group/tooltip" aria-label="Lihat detail mata kuliah Pemrograman Web">
+                                <i data-lucide="info" class="w-5 h-5"></i>
+                                <span class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap">Lihat Detail Mata Kuliah</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Banner Informasi -->
+                <section class="bg-indigo-900 p-8 rounded-3xl text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-xl font-bold mb-2">Pendaftaran Beasiswa Unggulan</h2>
+                        <p class="text-indigo-200 text-sm max-w-md mb-6">Telah dibuka pendaftaran beasiswa prestasi untuk semester depan. Segera unggah berkas Anda.</p>
+                        <button type="button" class="bg-white text-indigo-900 px-6 py-2 rounded-xl font-bold text-sm hover:scale-105 transition-transform">Daftar Sekarang</button>
+                    </div>
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-800 rounded-full -mr-20 -mt-20 opacity-50"></div>
+                </section>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Progres Akademik -->
+                <section class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <h2 class="text-lg font-bold mb-6">Capaian Akademik</h2>
+                    <!-- 10. LIST GROUP COMPONENT -->
+                    <div class="divide-y divide-slate-100">
+                        <div class="py-3 flex justify-between items-center">
+                            <span class="text-sm text-slate-500">IP Semester Lalu</span>
+                            <span class="font-bold text-slate-800">3.92</span>
+                        </div>
+                        <div class="py-3 flex justify-between items-center">
+                            <span class="text-sm text-slate-500">Total SKS Diambil</span>
+                            <span class="font-bold text-slate-800">124</span>
+                        </div>
+                        <div class="py-3 flex justify-between items-center">
+                            <span class="text-sm text-slate-500">Predikat</span>
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Cum Laude</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tugas Section -->
+                <section class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <h2 class="text-lg font-bold mb-4">Tugas Terdekat</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer border border-transparent hover:border-slate-100">
+                            <i data-lucide="check-circle-2" class="text-slate-300 w-5 h-5 mt-0.5" aria-hidden="true"></i>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800">Laporan Akhir Basis Data</h3>
+                                <p class="text-xs text-red-500 mt-0.5 font-medium italic">Sisa 2 hari lagi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Trigger Modal Button -->
+                    <button onclick="toggleModal()" class="w-full mt-4 py-3 border-2 border-dashed border-slate-200 text-slate-400 text-sm font-bold rounded-2xl hover:border-indigo-300 hover:text-indigo-500 transition-all" aria-haspopup="dialog">
+                        + Tambah Tugas Mandiri
+                    </button>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Inisialisasi Lucide Icons
+        lucide.createIcons();
+
+        // Modal Logic
+        function toggleModal() {
+            const modal = document.getElementById('taskModal');
+            modal.classList.toggle('modal-hidden');
+            if (!modal.classList.contains('modal-hidden')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+</html>
